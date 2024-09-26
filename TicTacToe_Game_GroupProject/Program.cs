@@ -1,133 +1,130 @@
-﻿namespace TicTacToe_Game_GroupProject
+﻿namespace TicTacToe_Test
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("TIC TAC TOE"); //title
+            Console.WriteLine("TIC TAC TOE");
 
-            //Variables, to store data inside
-            string player1 = "x";
-            string player2 = "o";
-            string currentPlayer = player1; //variable to change 
+            string[] buttons = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+            string player1 = "X";
+            string player2 = "O";
+            string currentPlayer = player1;
+            int gameCounter = 0;
+            bool gameOn = true;
 
-            //Displays the GameBoard, buttons 
-            string button1 = "7";
-            string button2 = "8";
-            string button3 = "9";
-            string button4 = "4";
-            string button5 = "5";
-            string button6 = "6";
-            string button7 = "1";
-            string button8 = "2";
-            string button9 = "3";
-
-            Console.WriteLine();
-            Console.WriteLine($"{button1}|{button2}|{button3}|");
-            Console.WriteLine($"______");
-            Console.WriteLine($"{button4}|{button5}|{button6}|");
-            Console.WriteLine($"______");
-            Console.WriteLine($"{button7}|{button8}|{button9}|");
-
-            //List, to keep track of players choises(inputs)
-            List<string> playerHistory = new List<string>(); //Empty string list
-
-            int gameCounter = 0;//Keeps track of rounds being played
-
-            for (int i = 0; i <= 9; i++) //Loops only 9 times because there's only 9 buttons
+            while (gameOn)
             {
-                gameCounter++;
+                Console.Clear();
+                DisplayBoard(buttons);
+                Console.WriteLine("Round: " + gameCounter);
+                Console.WriteLine($"\nPlayer {currentPlayer}'s turn:");
+                Console.WriteLine("Choose a number between 1-9");
+                string userInput = Console.ReadLine();
 
-                if (i == 9) //Checks if all 9 buttons has been used
+                if (IsValidMove(userInput, buttons))
                 {
-                    Console.WriteLine("9 rounds has been played");
+                    //users valid input will be added, and their tag will replace the gameboard number to either x/o
+                    MakeMove(userInput, buttons, currentPlayer);
+                    gameCounter++;
+
+                    //Checks: WINNER/DRAW
+                    if (CheckWinner(buttons, currentPlayer))
+                    {
+                        DisplayBoard(buttons);
+                        Console.WriteLine($"\nplayer {currentPlayer} wins!");
+                        gameOn = false;
+                    }
+                    else if (gameCounter == 9)
+                    {
+                        DisplayBoard(buttons);
+                        Console.WriteLine("\nDraw!");
+                        gameOn = false;
+                    }
+                    else //Swaps turns
+                    {
+                        currentPlayer = currentPlayer == player1 ? player2 : player1;
+                    }
+                }
+                else //If enter a text, error message will show in console
+                {
+                    Console.WriteLine($"'{userInput}' is not a valid input. " +
+                        $"\nPlayer '{currentPlayer}' will be skipped." +
+                        $"\nPress any key to continue");
+
+                    //Swaps turns
+                    if (currentPlayer == player1)
+                    {
+                        currentPlayer = player2;
+                    }
+                    else
+                    {
+                        currentPlayer = player1;
+                    }
                     Console.ReadKey();
 
+
                 }
+            }
+        }
 
-                // Display the current game board
-                //each button is a variable, so it's changable depending on which player is playing
-                Console.Clear();
-                Console.WriteLine($"{button1}|{button2}|{button3}");
-                Console.WriteLine($"_____");
-                Console.WriteLine($"{button4}|{button5}|{button6}");
-                Console.WriteLine($"_____");
-                Console.WriteLine($"{button7}|{button8}|{button9}");
-
-
-                // Display the current player’s turn
-                Console.WriteLine($"\nGame Counter: {gameCounter}");
-                Console.WriteLine($"\nPlayer {currentPlayer}'s turn");
-                Console.WriteLine("Select a number from 1 through 9:");
-
-                //User input
-                Console.Write("\nChoice:");
-                string userinput = Console.ReadLine();
-
-                //checks if input has bgeen choosen before
-                if (playerHistory.Contains(userinput))
+        //Checks users input
+        static bool IsValidMove(string userInput, string[] buttons)
+        {
+            if (int.TryParse(userInput, out int move))
+            {
+                if (move >= 1 && move <= 9)
                 {
-                    Console.WriteLine($"'{userinput}' has already been taken. Try again");
-                    gameCounter--; //Removes the turn
-                    continue;
-                }
-
-                playerHistory.Add(userinput);//User inputs being added into the last
-
-
-
-                Console.WriteLine();
-                //Switch, checks user input depending on which number they submited
-                switch (userinput)
-                {
-                    case "1":
-                        button7 = currentPlayer;
-                        break;
-                    case "2":
-                        button8 = currentPlayer;
-                        break;
-                    case "3":
-                        button9 = currentPlayer;
-                        break;
-                    case "4":
-                        button4 = currentPlayer;
-                        break;
-                    case "5":
-                        button5 = currentPlayer;
-                        break;
-                    case "6":
-                        button6 = currentPlayer;
-                        break;
-                    case "7":
-                        button1 = currentPlayer;
-                        break;
-                    case "8":
-                        button2 = currentPlayer;
-                        break;
-                    case "9":
-                        button3 = currentPlayer;
-                        break;
-                    default:
-                        Console.WriteLine("Please enter a valid number, between 1-9");
-                        i--; //removes the counting, so it doesnt show as a turn
-                        continue;
-
-                }//End of switch
-
-
-                //If-statements, taking care of who's turns it is
-                if (currentPlayer == player1)
-                {
-                    currentPlayer = player2;
+                    return buttons[move - 1] != "X" && buttons[move - 1] != "O";
                 }
                 else
                 {
-                    currentPlayer = player1;
+                    Console.WriteLine($"'{userInput}' is not a valid input betwen 1-9");
                 }
+            }
+            return false;
+        }
+
+        //Updates game board
+        static void MakeMove(string userInput, string[] buttons, string currentPlayer)
+        {
+            int move = int.Parse(userInput);
+            buttons[move - 1] = currentPlayer;//The player declares into index, so the number will be changed and be replaced with either x/o
+        }
 
 
-            }//End of for-loop
+        static void DisplayBoard(string[] buttons)
+        {
+            Console.WriteLine($"{buttons[0]}|{buttons[1]}|{buttons[2]}");
+            Console.WriteLine("--+--+--");
+            Console.WriteLine($"{buttons[3]}|{buttons[4]}|{buttons[5]}");
+            Console.WriteLine("--+--+--");
+            Console.WriteLine($"{buttons[6]}|{buttons[7]}|{buttons[8]}");
+        }
 
+        //Checks if there's a winner
+        static bool CheckWinner(string[] buttons, string player)
+        {
+            int[][] winningCombinations = new int[][] //Jagged array = creates multiple new arrays with different elements
+            {
+                new int[] { 0, 1, 2 },
+                new int[] { 3, 4, 5 },
+                new int[] { 6, 7, 8 },
+                new int[] { 0, 3, 6 },
+                new int[] { 1, 4, 7 },
+                new int[] { 2, 5, 8 },
+                new int[] { 0, 4, 8 },
+                new int[] { 2, 4, 6 }
+            };
+
+            foreach (var combo in winningCombinations)//loops trough the array
+            {
+                if (buttons[combo[0]] == player && buttons[combo[1]] == player && buttons[combo[2]] == player) //Checks if there's any win-combo
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
