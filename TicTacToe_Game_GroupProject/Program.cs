@@ -1,4 +1,4 @@
-﻿namespace TicTacToe_Test
+﻿namespace TicTacToe_Game_GroupProject
 {
     internal class Program
     {
