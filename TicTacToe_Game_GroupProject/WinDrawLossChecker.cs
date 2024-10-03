@@ -8,7 +8,7 @@ namespace TicTacToe_Game_GroupProject
 {
     internal class WinDrawLossChecker
     {
-        public bool CheckWinner(string[] buttons, string player)
+        public bool CheckWinner(string[] board, string playerSymbol)
         {
             int[][] winningCombinations = new int[][]
             {
@@ -24,7 +24,7 @@ namespace TicTacToe_Game_GroupProject
 
             foreach (var combo in winningCombinations)
             {
-                if (buttons[combo[0]] == player && buttons[combo[1]] == player && buttons[combo[2]] == player)
+                if (board[combo[0]] == playerSymbol && board[combo[1]] == playerSymbol && board[combo[2]] == playerSymbol)
                 {
                     return true;
                 }

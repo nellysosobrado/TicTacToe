@@ -17,7 +17,7 @@ namespace TicTacToe_Game_GroupProject
                 "\n2.Exit");
         }//End if ShowMenu()
         
-        public int GetMenuChoice()
+        public int GetMenuChoice() //Method, checks invalid/valid inputs
         {
             string input = Console.ReadLine().Trim();
             if (int.TryParse(input, out int choice)) //Checks if it's a number
@@ -40,6 +40,8 @@ namespace TicTacToe_Game_GroupProject
                 return 0; 
             }
         }
+        
+
 
     }
 }
