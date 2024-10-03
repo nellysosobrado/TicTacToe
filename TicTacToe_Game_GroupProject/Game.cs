@@ -13,7 +13,6 @@ namespace TicTacToe_Game_GroupProject
         private Board board;
         private WinDrawLossChecker winnerChecker;
 
-        // Konstruktorn som initierar klasserna
         public Game()
         {
             players = new PlayerManager();
@@ -21,10 +20,9 @@ namespace TicTacToe_Game_GroupProject
             winnerChecker = new WinDrawLossChecker();
         }
 
-        // Startar spelet
         public void Start()
         {
-            players.PlayerDetails(); // Sätter upp spelarna utan namn-inmatning
+            players.PlayerDetails();
             bool gameOn = true;
             int gameCounter = 0;
 
@@ -38,28 +36,28 @@ namespace TicTacToe_Game_GroupProject
 
                 string userInput = Console.ReadLine();
 
-                // Kontrollerar användarens input
                 if (board.IsValidMove(userInput))
                 {
                     board.MakeMove(userInput, currentPlayer.Symbol);
                     gameCounter++;
 
-                    // Kontrollerar om någon har vunnit
                     if (winnerChecker.CheckWinner(board.BoardState, currentPlayer.Symbol))
                     {
                         board.Display();
                         Console.WriteLine($"\nPlayer {currentPlayer.Name} wins!");
                         gameOn = false;
+                        AskToPlayAgain(ref gameOn, ref gameCounter);
                     }
                     else if (gameCounter == 9)
                     {
                         board.Display();
-                        Console.WriteLine("\n It's a draw!");
+                        Console.WriteLine("\nIt's a draw!");
                         gameOn = false;
+                        AskToPlayAgain(ref gameOn, ref gameCounter);
                     }
                     else
                     {
-                        players.PlayerOrder(); // Växlar spelare
+                        players.PlayerOrder(); // Växla spelare
                     }
                 }
                 else
@@ -68,6 +66,23 @@ namespace TicTacToe_Game_GroupProject
                         "\nPress any key to continue...");
                     Console.ReadKey();
                 }
+            }
+        }
+
+        // Frågar om spelarna vill spela igen
+        private void AskToPlayAgain(ref bool gameOn, ref int gameCounter)
+        {
+            Console.WriteLine("Do you want to play again? (y/n)");
+            string playAgain = Console.ReadLine().ToLower();
+            if (playAgain == "y")
+            {
+                board.ResetBoard();
+                gameCounter = 0;
+                gameOn = true;
+            }
+            else
+            {
+                Console.WriteLine("Thank you for playing!\nProgram is closing...");
             }
         }
     }

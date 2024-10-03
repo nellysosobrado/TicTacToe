@@ -11,37 +11,64 @@ namespace TicTacToe_Game_GroupProject
         //Displays start page
         public void ShowMenu()
         {
-            Console.WriteLine("Welcome to Tic-Tac-Toe!");
-            Console.WriteLine(
-                "\n1.Start Game" +
-                "\n2.Exit");
-        }//End if ShowMenu()
-        
-        public int GetMenuChoice() //Method, checks invalid/valid inputs
-        {
-            string input = Console.ReadLine().Trim();
-            if (int.TryParse(input, out int choice)) //Checks if it's a number
+            DisplayTitle(); // Visa spelets titel
+
+            Console.WriteLine("1. Start Game");
+            Console.WriteLine("2. Exit");
+
+            int choice = GetMenuChoice();
+
+            if (choice == 1)
             {
-                if(choice >0 && choice < 10) // checks if the input is valid button number (1-9)
-                {
-                    return choice;
-                }
-                else//if it's a number that is not in the board, it will give error
-                {
-                    Console.WriteLine($"'{input}' does not exist. Please enter a valid button");
-                    return choice;
-
-                }
-
+                Console.WriteLine("Starting the game...");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey(); // Vänta på att användaren ska trycka på en knapp innan spelet startar
+                Game game = new Game();
+                game.Start(); // Starta spelet
             }
-            else
+            else if (choice == 2)
             {
-                Console.WriteLine($"'{input}' is not a valid number");
-                return 0; 
+                Console.WriteLine("Exiting...");
             }
         }
-        
+        // Method to display the "TIC TAC TOE" title
+        static void DisplayTitle()
+        {
+            // ASCII Art or simple text for "TIC TAC TOE"
+            string title = @"
+   __  _   ___       __  __   __       __  __   __    
+  /\_  _\/\ \ /\  _\     /\_  \/\  _ \ /\  _\     /\_  _\/\  _ \ /\  _\   
+  \//\ \/\ \ \\ \ \_    \//\ \/\ \  _ \\ \ \__    \//\ \/\ \ \/\ \\ \  _\   
+     \ \\ \ \\\ \__\      \ \\ \ \\ \\\ \__\      \ \\ \ \__\\ \__\ 
+      \//  \// \/__/       \//  \//\// \/__/       \//  \/__/ \/__/ 
+                                                                                     
+";
+
+            Console.ForegroundColor = ConsoleColor.Yellow;  // Set title color to Cyan
+            Console.WriteLine(title);  // Print the title
+            Console.ResetColor();  // Reset color back to default
+        }
 
 
+        //Method, starts the game
+
+        // Hämtar och validerar användarens menyval
+        private int GetMenuChoice()
+        {
+            while (true)
+            {
+                Console.WriteLine("Enter your choice (1 or 2):");
+                string input = Console.ReadLine().Trim();
+
+                if (int.TryParse(input, out int choice) && (choice == 1 || choice == 2))
+                {
+                    return choice;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice. Please enter 1 to start the game or 2 to exit.");
+                }
+            }
+        }
     }
 }

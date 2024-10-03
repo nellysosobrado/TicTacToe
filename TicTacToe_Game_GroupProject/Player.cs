@@ -8,10 +8,9 @@ namespace TicTacToe_Game_GroupProject
 {
     public class Player
     {
-        public string Name { get; set; } // Spelarens namn
-        public string Symbol { get; set; } // Spelarens symbol (X eller O)
+        public string Name { get; set; }
+        public string Symbol { get; set; }
 
-        // Konstruktor för att initialisera spelaren med namn och symbol
         public Player(string name, string symbol)
         {
             Name = name;

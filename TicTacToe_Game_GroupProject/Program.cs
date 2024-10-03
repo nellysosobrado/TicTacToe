@@ -5,9 +5,12 @@
         static void Main(string[] args)
         {
 
-            Game game =new Game();//Instance of Game class
-            game.Start(); //Program starts trough class Game
 
+            // Skapa en instans av Game-klassen och starta spelet
+            Menu game = new Menu();
+            game.ShowMenu(); // Anropa spelets Start-metod
         }
+
+        
     }
 }

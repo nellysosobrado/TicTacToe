@@ -11,7 +11,7 @@ namespace TicTacToe_Game_GroupProject
         public bool CheckWinner(string[] board, string playerSymbol)
         {
             int[][] winningCombinations = new int[][]
-            {
+             {
                 new int[] { 0, 1, 2 },
                 new int[] { 3, 4, 5 },
                 new int[] { 6, 7, 8 },
@@ -20,7 +20,7 @@ namespace TicTacToe_Game_GroupProject
                 new int[] { 2, 5, 8 },
                 new int[] { 0, 4, 8 },
                 new int[] { 2, 4, 6 }
-            };
+             };
 
             foreach (var combo in winningCombinations)
             {
@@ -32,4 +32,6 @@ namespace TicTacToe_Game_GroupProject
             return false;
         }
     }
+    
+    
 }
