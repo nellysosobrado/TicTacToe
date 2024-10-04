@@ -8,92 +8,145 @@ namespace TicTacToe_Game_GroupProject
 {
     public class Board
     {
-        private string[] board = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+        private string[] board = { " ", " ", " ", " ", " ", " ", " ", " ", " " }; // Tomma rutor
+        private int currentRow = 0;
+        private int currentCol = 0;
+
+        // Publika egenskaper för att kunna hämta currentRow och currentCol från Game-klassen
+        public int CurrentRow => currentRow;
+        public int CurrentCol => currentCol;
 
         public string[] BoardState => board;
 
-        public bool IsValidMove(string userInput)
+        // Kontrollera om draget är giltigt
+        public bool IsValidMove(int index)
         {
-            if (int.TryParse(userInput, out int move) && move >= 1 && move <= 9)
-            {
-                return board[move - 1] != "X" && board[move - 1] != "O";
-            }
-            return false;
+            return board[index] != "X" && board[index] != "O"; // Kontrollera att rutan är tom
         }
 
-        public void MakeMove(string userInput, string currentPlayerSymbol)
+        // Genomför ett drag
+        public void MakeMove(int index, string currentPlayerSymbol)
         {
-            int move = int.Parse(userInput);
-            board[move - 1] = currentPlayerSymbol;
+            board[index] = currentPlayerSymbol; // Placera symbolen i rutan
         }
 
-        public void Display(string currentPlayer)
+        // Visa brädan och eventuellt felmeddelande
+        public void Display(string currentPlayer, string symbol, string errorMessage = "")
         {
             Console.Clear(); // Rensa konsolen innan varje visning
 
-            // Ställ in Unicode-stöd för konsolen
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            int windowWidth = Console.WindowWidth;
+            int windowHeight = Console.WindowHeight;
 
-            // Anpassa fönsterstorleken för att rymma brädan
-            Console.SetWindowSize(50, 20);
-
-            // Flytta ner texten för att lämna utrymme för att brädan hamnar i mitten
-            int emptyLinesBeforeBoard = (Console.WindowHeight - 15) / 2; // 15 rader för spelplan och raminformation
-            for (int i = 0; i < emptyLinesBeforeBoard; i++)
-            {
-                Console.WriteLine(); // Tomma rader för att centrera i höjdled
-            }
+            // Beräkna var vi ska börja skriva ut text och bräda för att centrera den
+            int topPadding = (windowHeight - 9) / 2; // 9 rader för brädan
+            int leftPadding = (windowWidth - 23) / 2; // 23 tecken bred
 
             // Centrera rubriken för aktuell spelare och instruktionen
-            CenterText($"Player {currentPlayer}'s turn");
-            CenterText("Choose a number between 1-9");
-            Console.WriteLine(); // Extra rad för separation
+            CenterText($"Player {currentPlayer} turn ({symbol})", leftPadding, topPadding - 2);
 
-            // Rama in brädan och gör den större med raka linjer
-            CenterText("╔═════╦═════╦═════╗");
-            CenterText($"║  {FormatCell(board[6])}  ║  {FormatCell(board[7])}  ║  {FormatCell(board[8])}  ║");
-            CenterText("╠═════╬═════╬═════╣");
-            CenterText($"║  {FormatCell(board[3])}  ║  {FormatCell(board[4])}  ║  {FormatCell(board[5])}  ║");
-            CenterText("╠═════╬═════╬═════╣");
-            CenterText($"║  {FormatCell(board[0])}  ║  {FormatCell(board[1])}  ║  {FormatCell(board[2])}  ║");
-            CenterText("╚═════╩═════╩═════╝");
-            Console.WriteLine(); // Extra rad för separation
+            // Rita upp brädan med highlight på den valda rutan
+            for (int row = 0; row < 3; row++)
+            {
+                SetCursorPositionCentered(leftPadding, topPadding + row * 2);
+                Console.WriteLine("╔═════╦═════╦═════╗");
+
+                SetCursorPositionCentered(leftPadding, topPadding + row * 2 + 1);
+                Console.Write("║");
+                for (int col = 0; col < 3; col++)
+                {
+                    int index = row * 3 + col;
+
+                    // Highlight rutan där markören är
+                    if (row == currentRow && col == currentCol)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGray; // Markera rutan
+                    }
+
+                    string cell = board[index]; // Cellens värde
+                    Console.Write($"  {cell}  "); // Skriv ut cellens innehåll
+                    Console.ResetColor(); // Återställ färger
+
+                    Console.Write("║");
+                }
+                Console.WriteLine();
+            }
+            SetCursorPositionCentered(leftPadding, topPadding + 6);
+            Console.WriteLine("╚═════╩═════╩═════╝");
+
+            // Om det finns ett felmeddelande, visa det i röd färg under brädan
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                Console.ForegroundColor = ConsoleColor.Red; // Sätt textfärgen till röd
+                CenterText(errorMessage, leftPadding, topPadding + 8); // Placera meddelandet under brädan
+                Console.ResetColor(); // Återställ färger
+            }
         }
 
-        private string FormatCell(string cell)
+        // Sätt markören för att centrera text eller brädan
+        private void SetCursorPositionCentered(int leftPadding, int topPadding)
         {
-            // Ger färg beroende på om det är X eller O
-            if (cell == "X")
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-            }
-            else if (cell == "O")
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.White; // Standardfärg för tomma celler
-            }
-
-            string formattedCell = $"{cell}"; // Behåll cellens värde
-            Console.ResetColor(); // Återställ färgen för att inte påverka resten av texten
-            return formattedCell;
+            Console.SetCursorPosition(leftPadding, topPadding);
         }
 
-        private void CenterText(string text)
+        // Centrera texten baserat på fönstrets bredd
+        private void CenterText(string text, int leftPadding, int topPadding)
         {
-            // Hämta konsolens bredd och räkna ut var texten ska börja
-            int windowWidth = Console.WindowWidth;
-            int centeredPosition = (windowWidth - text.Length) / 2;
-            Console.SetCursorPosition(centeredPosition, Console.CursorTop); // Sätt textens position
+            Console.SetCursorPosition(leftPadding, topPadding);
             Console.WriteLine(text);
         }
 
         public void ResetBoard()
         {
-            board = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+            board = new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " " }; // Tomma rutor
         }
 
+        // Uppdaterad metod som kontrollerar draget och skickar ett felmeddelande om nödvändigt
+        public bool NavigateAndMakeMove(string currentPlayerSymbol, out string errorMessage)
+        {
+            ConsoleKey key;
+            errorMessage = ""; // Tomt felmeddelande
+
+            do
+            {
+                Display(currentPlayerSymbol == "X" ? "1" : "2", currentPlayerSymbol, errorMessage); // Visa brädan och felmeddelande om det finns
+
+                // Beräkna index för att sätta markören
+                int index = currentRow * 3 + currentCol;
+
+                key = Console.ReadKey(true).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (currentRow > 0) currentRow--; // Flytta uppåt
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (currentRow < 2) currentRow++; // Flytta nedåt
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        if (currentCol > 0) currentCol--; // Flytta vänster
+                        break;
+                    case ConsoleKey.RightArrow:
+                        if (currentCol < 2) currentCol++; // Flytta höger
+                        break;
+                    case ConsoleKey.Enter:
+                        if (IsValidMove(index)) // Kontrollera om draget är giltigt när Enter trycks
+                        {
+                            MakeMove(index, currentPlayerSymbol); // Gör draget om giltigt
+                            return true; // Returnera true om draget är giltigt och avsluta
+                        }
+                        else
+                        {
+                            // Ogiltigt drag, sätt felmeddelande
+                            errorMessage = "Invalid move! The cell is already occupied.";
+                            return false;
+                        }
+                }
+
+            } while (key != ConsoleKey.Escape);
+
+            return false; // Om ingen giltig input ges
+        }
     }
 }

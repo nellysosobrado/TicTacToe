@@ -125,8 +125,9 @@ namespace TicTacToe_Game_GroupProject
             {
                 Console.Clear();
                 DisplayCenteredText("Starting the game...", ConsoleColor.Green);
-                Console.WriteLine("Press any key to continue...");
-                Console.ReadKey(); // Vänta på att användaren trycker på en knapp innan spelet startar
+                ShowLoadingBar(); // Visa en animerad laddningsbar
+
+                Console.Clear(); // Rensa konsolen efter laddningen
                 Game game = new Game();
                 game.Start(); // Starta spelet
             }
@@ -136,6 +137,39 @@ namespace TicTacToe_Game_GroupProject
                 DisplayCenteredText("Exiting...", ConsoleColor.Red);
                 Environment.Exit(0); // Avsluta programmet
             }
+        }
+
+        private void ShowLoadingBar()
+        {
+            int total = 50; // Total längd på laddningsbaren
+            int windowWidth = Console.WindowWidth; // Hämta konsolens bredd
+
+            // Centrera och visa laddningstexten
+            string loadingText = "Loading...";
+            int paddingText = (windowWidth - loadingText.Length) / 2;
+            Console.SetCursorPosition(paddingText, Console.CursorTop); // Sätt textens position
+            Console.WriteLine(loadingText);
+
+            // Centrera och visa laddningsbaren
+            int paddingBar = (windowWidth - total) / 2;
+            Console.SetCursorPosition(paddingBar, Console.CursorTop); // Sätt laddningsbarens position
+            Console.Write("["); // Start på laddningsbaren
+
+            for (int i = 0; i < total; i++)
+            {
+                Console.Write("="); // Lägg till ett steg i laddningsbaren
+                Thread.Sleep(50); // Fördröjning för att skapa laddningseffekten (50 ms per steg)
+            }
+
+            Console.WriteLine("]"); // Avsluta laddningsbaren
+
+            // Centrera och visa "Loading complete!" texten
+            string completeText = "Loading complete!";
+            int paddingCompleteText = (windowWidth - completeText.Length) / 2;
+            Console.SetCursorPosition(paddingCompleteText, Console.CursorTop); // Sätt positionen för "Loading complete!"
+            Console.WriteLine(completeText);
+
+            Thread.Sleep(1000); // Pausa lite efter att laddningen är klar
         }
 
         // Visar centrerad text med färg
