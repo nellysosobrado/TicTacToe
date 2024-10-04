@@ -8,67 +8,144 @@ namespace TicTacToe_Game_GroupProject
 {
     public class Menu
     {
-        //Displays start page
+        // Visar startmenyn
         public void ShowMenu()
         {
             DisplayTitle(); // Visa spelets titel
 
-            Console.WriteLine("1. Start Game");
-            Console.WriteLine("2. Exit");
-
-            int choice = GetMenuChoice();
-
-            if (choice == 1)
-            {
-                Console.WriteLine("Starting the game...");
-                Console.WriteLine("Press any key to continue...");
-                Console.ReadKey(); // Vänta på att användaren ska trycka på en knapp innan spelet startar
-                Game game = new Game();
-                game.Start(); // Starta spelet
-            }
-            else if (choice == 2)
-            {
-                Console.WriteLine("Exiting...");
-            }
+            // Piltangentnavigering för menyn
+            NavigateMenu();
         }
-        // Method to display the "TIC TAC TOE" title
+
+        // Metod för att visa den centrerade "TIC TAC TOE"-titeln och placera den närmare mitten
         static void DisplayTitle()
         {
-            // ASCII Art or simple text for "TIC TAC TOE"
+            // Behåll din originalrubrik här
             string title = @"
    ______  __   ______       ______  ______   ______       ______  ______   ______    
   /\__  _\/\ \ /\  ___\     /\__  _\/\  __ \ /\  ___\     /\__  _\/\  __ \ /\  ___\   
   \/_/\ \/\ \ \\ \ \____    \/_/\ \/\ \  __ \\ \ \____    \/_/\ \/\ \ \/\ \\ \  __\   
      \ \_\ \ \_\\ \_____\      \ \_\ \ \_\ \_\\ \_____\      \ \_\ \ \_____\\ \_____\ 
       \/_/  \/_/ \/_____/       \/_/  \/_/\/_/ \/_____/       \/_/  \/_____/ \/_____/ 
-                                                                                     
 ";
 
             Console.ForegroundColor = ConsoleColor.Yellow;  // Set title color to Cyan
-            Console.WriteLine(title);  // Print the title
-            Console.ResetColor();  // Reset color back to default
+            // Flytta rubriken till mitten, men utan att ta för mycket plats
+            int windowHeight = Console.WindowHeight;
+            int windowWidth = Console.WindowWidth;
+            int topPadding = (windowHeight / 3); // Flytta rubriken lite ovanför mitten
+
+            // Skriver ut tomma rader för att centrera vertikalt
+            for (int i = 0; i < topPadding; i++)
+            {
+                Console.WriteLine(); // Skapa tomma rader för att skjuta ner rubriken
+            }
+
+            // Räkna ut antalet mellanslag som behövs för att centrera texten horisontellt
+            string[] titleLines = title.Split('\n');
+            foreach (string line in titleLines)
+            {
+                int padding = (windowWidth - line.Length) / 2; // Beräkna hur många mellanslag som behövs
+                Console.WriteLine(new string(' ', padding) + line); // Skriv ut linjen med mellanslag
+            }
+
+            Console.ResetColor();  // Återställ färgen till standard
         }
 
-
-        //Method, starts the game
-
-        // Hämtar och validerar användarens menyval
-        private int GetMenuChoice()
+        // Piltangentnavigering och highlight-funktion
+        private void NavigateMenu()
         {
+            int selectedOption = 0;
+            string[] menuOptions = { "Start Game", "Exit" };
+
             while (true)
             {
-                Console.WriteLine("Enter your choice (1 or 2):");
-                string input = Console.ReadLine().Trim();
+                // Visa menyalternativen och markera valt alternativ
+                DisplayMenuOptions(menuOptions, selectedOption);
 
-                if (int.TryParse(input, out int choice) && (choice == 1 || choice == 2))
+                // Läs in tangenttryckningar från användaren
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                if (keyInfo.Key == ConsoleKey.UpArrow)
                 {
-                    return choice;
+                    selectedOption = (selectedOption == 0) ? menuOptions.Length - 1 : selectedOption - 1;
+                }
+                else if (keyInfo.Key == ConsoleKey.DownArrow)
+                {
+                    selectedOption = (selectedOption == menuOptions.Length - 1) ? 0 : selectedOption + 1;
+                }
+                else if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    // Bekräfta valet med "Enter"
+                    HandleMenuSelection(selectedOption);
+                    break;
+                }
+            }
+        }
+
+        // Visar menyalternativen och markerar valt alternativ utan att highlighta hela raden
+        private void DisplayMenuOptions(string[] options, int selectedOption)
+        {
+            Console.Clear(); // Rensa skärmen
+            DisplayTitle(); // Visa rubriken igen
+
+            int windowWidth = Console.WindowWidth;
+
+            // Skriv ut menyalternativen och markera det valda alternativet
+            for (int i = 0; i < options.Length; i++)
+            {
+                int padding = (windowWidth - options[i].Length) / 2;
+
+                // Skriv ut mellanslagen separat, utan highlight
+                Console.Write(new string(' ', padding));
+
+                // Highlight enbart texten
+                if (i == selectedOption)
+                {
+                    Console.ForegroundColor = ConsoleColor.White; // Markera valt alternativ med vit färg
+                    Console.BackgroundColor = ConsoleColor.DarkGray; // Lägg till bakgrund för highlight
+                    Console.Write(options[i]); // Skriv ut texten för highlight
                 }
                 else
                 {
-                    Console.WriteLine("Invalid choice. Please enter 1 to start the game or 2 to exit.");
+                    Console.ForegroundColor = ConsoleColor.Blue; // Övriga alternativ är i cyan
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.Write(options[i]); // Skriv ut de andra alternativen utan highlight
                 }
+
+                // Återställ färgerna för nästa rad
+                Console.ResetColor();
+                Console.WriteLine();
             }
+        }
+
+        // Hanterar valet av menyalternativ
+        private void HandleMenuSelection(int selectedOption)
+        {
+            if (selectedOption == 0)
+            {
+                Console.Clear();
+                DisplayCenteredText("Starting the game...", ConsoleColor.Green);
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey(); // Vänta på att användaren trycker på en knapp innan spelet startar
+                Game game = new Game();
+                game.Start(); // Starta spelet
+            }
+            else if (selectedOption == 1)
+            {
+                Console.Clear();
+                DisplayCenteredText("Exiting...", ConsoleColor.Red);
+                Environment.Exit(0); // Avsluta programmet
+            }
+        }
+
+        // Visar centrerad text med färg
+        private void DisplayCenteredText(string text, ConsoleColor color)
+        {
+            int windowWidth = Console.WindowWidth;
+            int padding = (windowWidth - text.Length) / 2; // Beräkna hur många mellanslag som behövs
+            Console.ForegroundColor = color; // Sätt färg på texten
+            Console.WriteLine(new string(' ', padding) + text); // Skriv ut texten med mellanslag
+            Console.ResetColor(); // Återställ färgen till standard
         }
     }
 }
