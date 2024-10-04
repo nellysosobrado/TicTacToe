@@ -47,15 +47,16 @@ namespace TicTacToe_Game_GroupProject
                         Console.WriteLine("It's a draw!");
                         isGameRunning = false;
                     }
-
-                    // Växla spelare
-                    currentPlayer = (currentPlayer == "1") ? "2" : "1";
                 }
                 else
                 {
-                    Console.WriteLine("Invalid move! Please try again.");
-                    Console.ReadKey(); // Vänta på att användaren trycker på en knapp
+                    // Om ogiltigt drag, visa meddelande och hoppa över till nästa spelare
+                    Console.WriteLine($"Invalid move by Player {currentPlayer}. Skipping to the next player's turn.");
+                    Console.ReadKey(); // Vänta på knapptryckning för att låta spelaren se meddelandet
                 }
+
+                // Växla spelare, oavsett om inmatningen var giltig eller ej
+                currentPlayer = (currentPlayer == "1") ? "2" : "1";
             }
         }
 
@@ -139,20 +140,27 @@ namespace TicTacToe_Game_GroupProject
         // Kolla om det finns en vinnare
         private bool CheckForWinner()
         {
-            string[,] winningCombinations = {
-                { board[0], board[1], board[2] },
-                { board[3], board[4], board[5] },
-                { board[6], board[7], board[8] },
-                { board[0], board[3], board[6] },
-                { board[1], board[4], board[7] },
-                { board[2], board[5], board[8] },
-                { board[0], board[4], board[8] },
-                { board[2], board[4], board[6] }
-            };
+            // Indexen för vinnande kombinationer
+            int[,] winningCombinations = {
+        { 0, 1, 2 }, // Rad 1
+        { 3, 4, 5 }, // Rad 2
+        { 6, 7, 8 }, // Rad 3
+        { 0, 3, 6 }, // Kolumn 1
+        { 1, 4, 7 }, // Kolumn 2
+        { 2, 5, 8 }, // Kolumn 3
+        { 0, 4, 8 }, // Diagonal 1
+        { 2, 4, 6 }  // Diagonal 2
+    };
 
-            foreach (var combination in winningCombinations)
+            // Gå igenom alla vinnarkombinationer
+            for (int i = 0; i < winningCombinations.GetLength(0); i++)
             {
-                if (combination[0] == combination[1] && combination[1] == combination[2])
+                int a = winningCombinations[i, 0];
+                int b = winningCombinations[i, 1];
+                int c = winningCombinations[i, 2];
+
+                // Kolla om alla tre värden är lika och inte är ett nummer
+                if (board[a] == board[b] && board[b] == board[c])
                 {
                     return true;
                 }
