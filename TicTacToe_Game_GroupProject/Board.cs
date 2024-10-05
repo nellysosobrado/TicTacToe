@@ -8,59 +8,112 @@ namespace TicTacToe_Game_GroupProject
 {
     public class Board
     {
-        private string[] board = { " ", " ", " ", " ", " ", " ", " ", " ", " " }; // Tomma rutor
+        //Instans variabler
+        private string[] board = { " ", " ", " ", " ", " ", " ", " ", " ", " " }; 
         private int currentRow = 0;
         private int currentCol = 0;
 
-        // Publika egenskaper för att kunna hämta currentRow och currentCol från Game-klassen
-        public int CurrentRow => currentRow;
-        public int CurrentCol => currentCol;
-
-        public string[] BoardState => board;
-
-        // Kontrollera om draget är giltigt
-        public bool IsValidMove(int index)
+       //Getters
+        public int CurrentRow
         {
-            return board[index] != "X" && board[index] != "O"; // Kontrollera att rutan är tom
+            get
+            {
+                if(currentRow <0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return currentRow;
+                }
+            }
         }
 
-        // Genomför ett drag
+        public int CurrentCol
+        {
+            get
+            {
+                if(currentCol > 2)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return currentCol;
+                }
+            }
+        }
+
+        //Trackear boardens innehåll
+        public string[] BoardState
+        {
+            get
+            {
+                return board;
+            }
+        }
+
+        //Undersöker input
+        public bool IsValidMove(int index)
+        {
+            if (board[index] =="X" || board[index] =="O")
+            {
+                return false; //Invalid input
+            }
+            else
+            {
+                return true; //Tom 
+            }
+        }
+
+        //User input blir markerad med dens Symbol "X" eller "O"
         public void MakeMove(int index, string currentPlayerSymbol)
         {
             board[index] = currentPlayerSymbol; // Placera symbolen i rutan
         }
 
-        // Visa brädan och eventuellt felmeddelande
+        /// <summary>
+        /// Method som visar upp bräddans innehåll
+        /// </summary>
+        /// <param name="currentPlayer">Player1 eller Player 2</param>
+        /// <param name="symbol">Antingen "X" eller "O" beroende på vilken spelare det är</param>
+        /// <param name="errorMessage">Felmeddelande i variabel, eftersom flexibelt att ändra</param>
+        //Method som visar up brädans innehåll
         public void Display(string currentPlayer, string symbol, string errorMessage = "")
         {
-            Console.Clear(); // Rensa konsolen innan varje visning
+            Console.Clear();
 
+            //Variablar av consolens bred & höjd
             int windowWidth = Console.WindowWidth;
             int windowHeight = Console.WindowHeight;
 
-            // Beräkna var vi ska börja skriva ut text och bräda för att centrera den
-            int topPadding = (windowHeight - 9) / 2; // 9 rader för brädan
-            int leftPadding = (windowWidth - 23) / 2; // 23 tecken bred
+            //Uträkning vart mitten är på höjden & bredden deklareras in i nya variablar
+            int topPadding = (windowHeight - 9) / 2; // 9 rader för brädan, Vertikalt
+            int leftPadding = (windowWidth - 23) / 2; // 23 tecken bred Horisontell
 
-            // Centrera rubriken för aktuell spelare och instruktionen
+            
+            //Method, som justerar så att texten hamnar i mitten
+            //leftPadding, justerar positionen på texten horisontellt
+            //toppading, justerar veritkallt
             CenterText($"Player {currentPlayer} turn ({symbol})", leftPadding, topPadding - 2);
-            CenterText($"Use 'arrow' keys to move. Press 'ENTER' to select a slot", leftPadding-17, topPadding +8);
-            CenterText($"Press 'Escape' to Quit", leftPadding, topPadding +10);
+            CenterText($"Press 'Escape' to Quit", leftPadding, topPadding + 10);
 
             // Rita upp brädan med highlight på den valda rutan
+            //Loopar igenom brädans row 3 gånger HORISTONELL
             for (int row = 0; row < 3; row++)
             {
-                SetCursorPositionCentered(leftPadding, topPadding + row * 2);
+                SetCursorPositionCentered(leftPadding, topPadding + row * 2);//Placerar navigationen beroende på vilken row loopen beffiner sig i
                 Console.WriteLine("╔═════╦═════╦═════╗");
 
-                SetCursorPositionCentered(leftPadding, topPadding + row * 2 + 1);
+                SetCursorPositionCentered(leftPadding, topPadding + row * 2 + 1);//Beroende på row nummer placeras det i första horistonella raden
                 Console.Write("║");
-                for (int col = 0; col < 3; col++)
+
+                for (int col = 0; col < 3; col++)//Loopar igenom brädan vertikallt
                 {
                     int index = row * 3 + col;
 
                     // Highlight rutan där markören är
-                    if (row == currentRow && col == currentCol)
+                    if (row == CurrentRow && col == CurrentCol)//Undersöker om användarens markör befinner sig i loopens "row"
                     {
                         Console.BackgroundColor = ConsoleColor.DarkGray; // Markera rutan
                     }
@@ -71,18 +124,23 @@ namespace TicTacToe_Game_GroupProject
 
                     Console.Write("║");
                 }
-                Console.WriteLine();
+                Console.WriteLine();//Ny rad skapas när alla tre kolumner har skapats, för att flytta ner markören
             }
+            //skriver ut sista delen av bräddan
             SetCursorPositionCentered(leftPadding, topPadding + 6);
             Console.WriteLine("╚═════╩═════╩═════╝");
 
-            // Om det finns ett felmeddelande, visa det i röd färg under brädan
-            if (!string.IsNullOrEmpty(errorMessage))
+            switch (errorMessage)//Undersöker om variabeln innehåller felmeddelande
             {
-                Console.ForegroundColor = ConsoleColor.Red; // Sätt textfärgen till röd
-                CenterText(errorMessage, leftPadding, topPadding + 8); // Placera meddelandet under brädan
-                Console.ResetColor(); // Återställ färger
+                case null:
+                case "":
+                    break;
+                default://Om variabeln innehåller något, mattas innehållet ut som felmeddelande
+                    Console.ForegroundColor = ConsoleColor.Red; //Textens färg
+                    CenterText(errorMessage, leftPadding, topPadding + 8); //Placerar felmeddelandet under bräddan
+                    break;
             }
+            
         }
 
         // Sätt markören för att centrera text eller brädan
@@ -114,7 +172,7 @@ namespace TicTacToe_Game_GroupProject
                 Display(currentPlayerSymbol == "X" ? "1" : "2", currentPlayerSymbol, errorMessage); // Visa brädan och felmeddelande om det finns
 
                 // Beräkna index för att sätta markören
-                int index = currentRow * 3 + currentCol;
+                int index = CurrentRow * 3 + CurrentCol;
 
                 key = Console.ReadKey(true).Key;
 
