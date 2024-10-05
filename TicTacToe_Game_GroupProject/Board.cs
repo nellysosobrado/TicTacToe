@@ -142,6 +142,10 @@ namespace TicTacToe_Game_GroupProject
                             errorMessage = "Invalid move! The cell is already occupied.";
                             return false;
                         }
+                    default:
+                        // Ogiltig tangent, skippa spelaren och visa felmeddelande
+                        errorMessage = "Invalid key! You will be skipped. Please use arrow keys to navigate.";
+                        return false; // Skippa spelaren
                 }
 
             } while (key != ConsoleKey.Escape);
