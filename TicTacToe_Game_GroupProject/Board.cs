@@ -6,22 +6,47 @@ using System.Threading.Tasks;
 
 namespace TicTacToe_Game_GroupProject
 {
+    //Displays the gameboard
+    //Navigation function with arrow keys
+    //Error handeling if input is not arrow keys
     public class Board
     {
-        private string[] board = { " ", " ", " ", " ", " ", " ", " ", " ", " " }; // Tomma rutor
+        //Instansvariables of Class board
         private int currentRow = 0;
         private int currentCol = 0;
+        private string[] board = new string[9]; //Array 9 slots
 
-        // Publika egenskaper för att kunna hämta currentRow och currentCol från Game-klassen
-        public int CurrentRow => currentRow;
-        public int CurrentCol => currentCol;
+        //getter methods
+        public int CurrentRow
+        {
+            get
+            {
+                return currentRow;
+            }
+        }
+        public int CurrentCol
+        {
+            get
+            {
+                return currentCol;
+            }
+        }
+        public string[]BoardState
+        {
+            get
+            {
+                return board;
+            }
+        }
 
-        public string[] BoardState => board;
-
-        // Kontrollera om draget är giltigt
+        // Checks valid input
         public bool IsValidMove(int index)
         {
-            return board[index] != "X" && board[index] != "O"; // Kontrollera att rutan är tom
+            if (board[index] == "X" || board[index] == "O") //Checks if selected slot contains O or X
+            {
+                return false; //Not a valid input
+            }
+            return true;//Valid input
         }
 
         // Genomför ett drag
@@ -44,6 +69,9 @@ namespace TicTacToe_Game_GroupProject
 
             // Centrera rubriken för aktuell spelare och instruktionen
             CenterText($"Player {currentPlayer} turn ({symbol})", leftPadding, topPadding - 2);
+            CenterText($"Player {currentPlayer} turn ({symbol})", leftPadding, topPadding - 2);
+            CenterText($"Use 'arrow' keys to move. Press Enter to 'select a slot", leftPadding - 10, topPadding - 1);
+
 
             // Rita upp brädan med highlight på den valda rutan
             for (int row = 0; row < 3; row++)
@@ -74,6 +102,7 @@ namespace TicTacToe_Game_GroupProject
             SetCursorPositionCentered(leftPadding, topPadding + 6);
             Console.WriteLine("╚═════╩═════╩═════╝");
 
+
             // Om det finns ett felmeddelande, visa det i röd färg under brädan
             if (!string.IsNullOrEmpty(errorMessage))
             {
@@ -81,6 +110,7 @@ namespace TicTacToe_Game_GroupProject
                 CenterText(errorMessage, leftPadding, topPadding + 8); // Placera meddelandet under brädan
                 Console.ResetColor(); // Återställ färger
             }
+           
         }
 
         // Sätt markören för att centrera text eller brädan
