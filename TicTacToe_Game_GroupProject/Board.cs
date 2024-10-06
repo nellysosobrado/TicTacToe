@@ -96,6 +96,7 @@ namespace TicTacToe_Game_GroupProject
             //leftPadding, justerar positionen på texten horisontellt
             //toppading, justerar veritkallt
             CenterText($"Player {currentPlayer} turn ({symbol})", leftPadding, topPadding - 2);
+            CenterText($"Use 'arrow' keys to move. Press 'ENTER' to select a slot", leftPadding-17, topPadding + 9);
             CenterText($"Press 'Escape' to Quit", leftPadding, topPadding + 10);
 
             // Rita upp brädan med highlight på den valda rutan
@@ -132,12 +133,15 @@ namespace TicTacToe_Game_GroupProject
 
             switch (errorMessage)//Undersöker om variabeln innehåller felmeddelande
             {
+                //Så länge variabeln innehåller något, så kommer switch satsen att mata ut variabelns innehåll i console.
                 case null:
                 case "":
                     break;
                 default://Om variabeln innehåller något, mattas innehållet ut som felmeddelande
                     Console.ForegroundColor = ConsoleColor.Red; //Textens färg
-                    CenterText(errorMessage, leftPadding, topPadding + 8); //Placerar felmeddelandet under bräddan
+                    CenterText(errorMessage, leftPadding, topPadding + 7); //Placerar felmeddelandet under bräddan
+                    CenterText("Next player's turn..Press any key to continue", leftPadding-10, topPadding + 8);
+                    Console.ResetColor();//Går tillbaka till ingen färg
                     break;
             }
             
@@ -150,19 +154,23 @@ namespace TicTacToe_Game_GroupProject
         }
 
         // Centrera texten baserat på fönstrets bredd
+        //Placerar markökren 
         private void CenterText(string text, int leftPadding, int topPadding)
         {
-            Console.SetCursorPosition(leftPadding, topPadding);
+   
+            Console.SetCursorPosition(leftPadding, topPadding);//Inbbygd metod i .NET console klass för att ändra placering positionen i console fönstret. Leftpadding Horisontell, Toppading Vertikalt. Detta kan liknas en kordinatsystem (X,Y) kordinat
             Console.WriteLine(text);
         }
 
+        //Bräddan med 9 lådor att användas inför uppsttart av spelet
         public void ResetBoard()
         {
-            board = new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " " }; // Tomma rutor
+            board = new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " " }; // 9 tomma rutor, eftersom det finns 9 moves att göra
         }
 
         // Uppdaterad metod som kontrollerar draget och skickar ett felmeddelande om nödvändigt
-        public bool NavigateAndMakeMove(string currentPlayerSymbol, out string errorMessage)
+        //Kontrollerar spelarens input
+        public bool NavigateAndMakeMove(string currentPlayerSymbol, out string errorMessage)//out returnerar ett extra värde
         {
             ConsoleKey key;
             errorMessage = ""; // Tomt felmeddelande
@@ -199,7 +207,7 @@ namespace TicTacToe_Game_GroupProject
                         else
                         {
                             // Ogiltigt drag, sätt felmeddelande
-                            errorMessage = "Invalid move! The cell is already occupied.";
+                            errorMessage = "Slot is already taken";
                             return false;
                         }
                     default:
@@ -208,7 +216,7 @@ namespace TicTacToe_Game_GroupProject
                         return false; // Skippa spelaren
                 }
 
-            } while (key != ConsoleKey.Escape);
+            } while (key != ConsoleKey.Escape);// Om en annan knap än arrow key trycks
 
             return false; // Om ingen giltig input ges
         }

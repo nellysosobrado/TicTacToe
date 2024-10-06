@@ -26,8 +26,7 @@ namespace TicTacToe_Game_GroupProject
 
                 if (!validMove)
                 {
-                    // Om draget var ogiltigt, visa meddelande om att spelaren skippas
-                    errorMessage = $"Invalid move! Player {currentPlayer} will be skipped. Next player's turn.";
+
                     board.Display(currentPlayer, currentPlayer == "1" ? "X" : "O", errorMessage);
                     Console.ReadKey(); // Vänta på att användaren trycker på en knapp för att se meddelandet
                     currentPlayer = (currentPlayer == "1") ? "2" : "1"; // Växla spelare
@@ -91,5 +90,6 @@ namespace TicTacToe_Game_GroupProject
         {
             return board.BoardState.All(s => s == "X" || s == "O");
         }
+        
     }
 }
