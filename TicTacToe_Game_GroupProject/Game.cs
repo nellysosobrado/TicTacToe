@@ -12,9 +12,9 @@ namespace TicTacToe_Game_GroupProject
     public class Game
     {
         private Board board = new Board(); // Använder din Board-klass
+        private ErrorManager errorManager = new ErrorManager(); // Lägg till en instans av ErrorManager
 
-        // Startar spelet
-        public void Start()
+        public void Start()// Startar spelet
         {
             string currentPlayer = "1"; // Spelare 1 startar
             bool isGameRunning = true;
@@ -27,7 +27,8 @@ namespace TicTacToe_Game_GroupProject
 
                 if (!validMove)
                 {
-                    board.Display(currentPlayer, currentPlayer == "1" ? "X" : "O", errorMessage);
+                    board.Display(currentPlayer, marker, errorMessage);
+                    //errorManager.DisplayErrorMessage(errorMessage, 10, 20); // Exempel på placering av felmeddelandet
                     Console.ReadKey(); // Vänta på att användaren trycker på en knapp för att se meddelandet
                     currentPlayer = (currentPlayer == "1") ? "2" : "1"; // Växla spelare
                     continue; // Hoppa över resten av loopen för att gå direkt till nästa spelare
@@ -35,7 +36,6 @@ namespace TicTacToe_Game_GroupProject
 
                 board.Display(currentPlayer, marker); // Visa brädan
 
-                // Kolla om någon har vunnit eller om det blivit oavgjort
                 if (CheckForWinner())
                 {
                     Console.WriteLine($"Player {currentPlayer} wins!");
@@ -53,7 +53,6 @@ namespace TicTacToe_Game_GroupProject
                 }
             }
         }
-
         // Växlar till nästa spelare
         private string SwitchPlayer(string currentPlayer)
         {
@@ -66,7 +65,6 @@ namespace TicTacToe_Game_GroupProject
             return currentPlayer == "1" ? "X" : "O";
         }
 
-        // Kolla om någon har vunnit
         private bool CheckForWinner()
         {
             int[,] winningCombinations = {
@@ -97,11 +95,9 @@ namespace TicTacToe_Game_GroupProject
             return false;
         }
 
-        // Kolla om brädan är full
         private bool IsBoardFull()
         {
             return board.BoardState.All(s => s == "X" || s == "O");
         }
-
     }
 }
