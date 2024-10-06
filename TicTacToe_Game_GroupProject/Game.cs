@@ -28,7 +28,6 @@ namespace TicTacToe_Game_GroupProject
                 if (!validMove)
                 {
                     board.Display(currentPlayer, marker, errorMessage);
-                    //errorManager.DisplayErrorMessage(errorMessage, 10, 20); // Exempel på placering av felmeddelandet
                     Console.ReadKey(); // Vänta på att användaren trycker på en knapp för att se meddelandet
                     currentPlayer = (currentPlayer == "1") ? "2" : "1"; // Växla spelare
                     continue; // Hoppa över resten av loopen för att gå direkt till nästa spelare

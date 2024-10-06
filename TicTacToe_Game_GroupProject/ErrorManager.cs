@@ -11,7 +11,7 @@ namespace TicTacToe_Game_GroupProject
         // Hanterar och returnerar ett felmeddelande baserat på en ogiltig tangent
         public string HandleInvalidKey()
         {
-            return "Invalid key! You will be skipped. Please use arrow keys to navigate.";
+            return "Invalid key. Use 'Arrows' keys to move. Press any key to continue";
         }
 
         // Hanterar och returnerar ett felmeddelande baserat på en upptagen ruta

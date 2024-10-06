@@ -8,19 +8,18 @@ namespace TicTacToe_Game_GroupProject
 {
     public class Menu
     {
-        // Visar startmenyn
-        public void ShowMenu()
+        
+        public void ShowMenu()//Metod som visar upp hela meny sidan 
         {
             DisplayTitle(); // Visa spelets titel
 
-            // Piltangentnavigering för menyn
-            NavigateMenu();
+            NavigateMenu();//Metod för att navigera med arrow keys
         }
-
-        // Metod för att visa den centrerade "TIC TAC TOE"-titeln och placera den närmare mitten
         static void DisplayTitle()
         {
-            // Behåll din originalrubrik här
+            //ASCII rubrik. För att undvika manuellt skriva radbrytning, tilldelas den som en string med @
+            //@ tilldelar rubriken exakt som den är i string variabeln
+  
             string title = @"                      
  /'\_/`\                             
 /\      \      __     ___    __  __  
@@ -31,42 +30,52 @@ namespace TicTacToe_Game_GroupProject
                                
 ";
 
-            Console.ForegroundColor = ConsoleColor.Yellow;  // Set title color to Cyan
-            // Flytta rubriken till mitten, men utan att ta för mycket plats
-            int windowHeight = Console.WindowHeight;
-            int windowWidth = Console.WindowWidth;
-            int topPadding = (windowHeight / 3); // Flytta rubriken lite ovanför mitten
+            Console.ForegroundColor = ConsoleColor.Yellow; //Gul rubrik
 
-            // Skriver ut tomma rader för att centrera vertikalt
-            for (int i = 0; i < topPadding; i++)
-            {
-                Console.WriteLine(); // Skapa tomma rader för att skjuta ner rubriken
-            }
+            //Centrera rubriken
+            CenterTextVertically();//Anroppar method som centrerar vertikalt i console
+            CenterText(title); //Anropar metod som centrerar Rubriken i console
 
-            // Räkna ut antalet mellanslag som behövs för att centrera texten horisontellt
-            string[] titleLines = title.Split('\n');
-            foreach (string line in titleLines)
-            {
-                int padding = (windowWidth - line.Length) / 2; // Beräkna hur många mellanslag som behövs
-                Console.WriteLine(new string(' ', padding) + line); // Skriv ut linjen med mellanslag
-            }
+            //Återställ färgen tillbacka
+            Console.ResetColor();
 
-            Console.ResetColor();  // Återställ färgen till standard
         }
+        static void CenterTextVertically()
+        {
+            int windowHeight = Console.WindowHeight; // Höjden på console
+            int topPadding = (windowHeight / 3); //Flyttas ovanför mitten
+
+            for(int i = 0; i<topPadding; i++)//Loopar ut tomma rader för centrering vertikalt
+            {
+                Console.WriteLine();
+            }
+        }
+        static void CenterText(string text) //Method som centrerar rubriken horisontellt
+        {
+            int windowWidht = Console.WindowWidth; // Console bredden
+            string[] lines = text.Split('\n');
+
+            foreach(string line in lines)
+            {
+                int padding = (windowWidht - line.Length) / 2;//7Beräknar mellanslag för centrering horistonellt
+                Console.WriteLine(new string(' ', padding) + line); //skriver ut varje rad
+            }
+        }
+        
 
         // Piltangentnavigering och highlight-funktion
         private void NavigateMenu()
         {
-            int selectedOption = 0;
-            string[] menuOptions = { "Start Game", "Exit" };
+            int selectedOption = 0;//markerar det första alternativet
+            string[] menuOptions = { "Start Game", "Exit" };//De olika alternativen i en string array
 
             while (true)
             {
                 // Visa menyalternativen och markera valt alternativ
                 DisplayMenuOptions(menuOptions, selectedOption);
 
-                // Läs in tangenttryckningar från användaren
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Användarens intrycken avläses
                 if (keyInfo.Key == ConsoleKey.UpArrow)
                 {
                     selectedOption = (selectedOption == 0) ? menuOptions.Length - 1 : selectedOption - 1;
@@ -75,9 +84,9 @@ namespace TicTacToe_Game_GroupProject
                 {
                     selectedOption = (selectedOption == menuOptions.Length - 1) ? 0 : selectedOption + 1;
                 }
-                else if (keyInfo.Key == ConsoleKey.Enter)
+                else if (keyInfo.Key == ConsoleKey.Enter) // Bekräfta valet med "Enter"
                 {
-                    // Bekräfta valet med "Enter"
+ 
                     HandleMenuSelection(selectedOption);
                     break;
                 }
@@ -120,58 +129,66 @@ namespace TicTacToe_Game_GroupProject
             }
         }
 
-        // Hanterar valet av menyalternativ
-        private void HandleMenuSelection(int selectedOption)
+        private void HandleMenuSelection(int selectedOption)//Hanterar användarens 'selected 'input
+ 
         {
-            if (selectedOption == 0)
+            if (selectedOption == 0) //Första meny alternativet 
             {
                 Console.Clear();
                 DisplayCenteredText("Starting the game...", ConsoleColor.Green);
-                ShowLoadingBar(); // Visa en animerad laddningsbar
+                ShowLoadingDots(); // Visa en animerad laddningsbar
 
                 Console.Clear(); // Rensa konsolen efter laddningen
                 Game game = new Game();
                 game.Start(); // Starta spelet
             }
-            else if (selectedOption == 1)
+            else if (selectedOption == 1) //Andra alternativet
             {
                 Console.Clear();
                 DisplayCenteredText("Exiting...", ConsoleColor.Red);
-                Environment.Exit(0); // Avsluta programmet
+                return; // Avsluta programmet
             }
         }
 
-        private void ShowLoadingBar()
+        private void ShowLoadingDots()//Method som visar transition mellan Menu till Game sidan
         {
-            int total = 50; // Total längd på laddningsbaren
-            int windowWidth = Console.WindowWidth; // Hämta konsolens bredd
+            string loadingText = "Loading";
+            int dotCount = 3; // Antalet prickar som ska visas
+            int delay = 500; // Fördröjning i millisekunder (0.5 sekunder)
+            int totalCycles = 5; // Hur länge animationen ska köras (antal cykler)
+            int windowWidth = Console.WindowWidth;
+            int windowHeight = Console.WindowHeight;
 
-            // Centrera och visa laddningstexten
-            string loadingText = "Loading...";
-            int paddingText = (windowWidth - loadingText.Length) / 2;
-            Console.SetCursorPosition(paddingText, Console.CursorTop); // Sätt textens position
-            Console.WriteLine(loadingText);
+            // Beräkna centrering för texten
+            int verticalPosition = windowHeight / 2;
+            int paddingText = (windowWidth - (loadingText.Length + dotCount)) / 2;
 
-            // Centrera och visa laddningsbaren
-            int paddingBar = (windowWidth - total) / 2;
-            Console.SetCursorPosition(paddingBar, Console.CursorTop); // Sätt laddningsbarens position
-            Console.Write("["); // Start på laddningsbaren
-
-            for (int i = 0; i < total; i++)
+            // Rensa skärmen och börja animationen
+            Console.Clear();
+            for (int cycle = 0; cycle < totalCycles; cycle++)
             {
-                Console.Write("="); // Lägg till ett steg i laddningsbaren
-                Thread.Sleep(50); // Fördröjning för att skapa laddningseffekten (50 ms per steg)
+                // För varje cykel, visa texten och prickarna
+                for (int dots = 0; dots <= dotCount; dots++)
+                {
+                    // Centrera texten och prickarna
+                    Console.SetCursorPosition(paddingText, verticalPosition);
+                    Console.Write(loadingText + new string('.', dots)); // Lägg till prickar
+
+                    Thread.Sleep(delay); // Vänta lite innan nästa cykel
+
+                    // Rensa raden för att ta bort prickarna innan nästa cykel
+                    Console.SetCursorPosition(paddingText, verticalPosition);
+                    Console.Write(new string(' ', loadingText.Length + dotCount)); // Rensa texten
+                }
             }
 
-            Console.WriteLine("]"); // Avsluta laddningsbaren
-
-            // Centrera och visa "Loading complete!" texten
-            string completeText = "Loading complete!";
+            // När laddningen är klar, visa "Done!"
+            string completeText = "have fun :D!";
             int paddingCompleteText = (windowWidth - completeText.Length) / 2;
-            Console.SetCursorPosition(paddingCompleteText, Console.CursorTop); // Sätt positionen för "Loading complete!"
+            Console.SetCursorPosition(paddingCompleteText, verticalPosition + 1);
             Console.WriteLine(completeText);
 
-            Thread.Sleep(1000); // Pausa lite efter att laddningen är klar
+            Thread.Sleep(1000); // Pausa en kort stund efter att laddningen är klar
         }
 
         // Visar centrerad text med färg
