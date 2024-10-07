@@ -54,9 +54,6 @@ namespace TicTacToe_Game_GroupProject
             }
         }
 
-
-
-
         public bool IsValidMove(int index)
         {
             return board[index] != "X" && board[index] != "O";
@@ -72,16 +69,16 @@ namespace TicTacToe_Game_GroupProject
             Console.Clear();
             int windowWidth = Console.WindowWidth;
             int windowHeight = Console.WindowHeight;
-            int topPadding = (windowHeight - 9) / 2;
-            int leftPadding = (windowWidth - 23) / 2;
+            int topPadding = (windowHeight - 9) / 2;//Vertikala mitten
+            int leftPadding = (windowWidth - 23) / 2;//Horistonella mitten
 
-            CenterText($"Player {currentPlayer} turn ({symbol})", leftPadding, topPadding - 2);
-            CenterText("Use 'arrow' keys to move. Press 'ENTER' to select a slot", leftPadding - 17, topPadding + 9);
-            CenterText("Press 'Escape' to Quit", leftPadding, topPadding + 10);
+            CenterText($"Player {currentPlayer} turn ({symbol})", leftPadding, topPadding - 2);//topppading -2 flyttar texten upp två rader
+            CenterText("Use 'arrow' keys to move. Press 'ENTER' to select a slot", leftPadding - 17, topPadding + 9);//Tänk kordinasystem leftpadding -17 steg vänster x-led. Toppadding y-led +9 radder läggs till vilket gör att texten går neråt
+            CenterText("Press 'Escape' to Quit", leftPadding, topPadding + 10);// texten går 9steg vertikalt neråt
 
-            for (int row = 0; row < 3; row++)
+            for (int row = 0; row < 3; row++)//loopar ut spelbräddan i console
             {
-                SetCursorPositionCentered(leftPadding, topPadding + row * 2);
+                SetCursorPositionCentered(leftPadding, topPadding + row * 2);//Placerar markeringen
                 Console.WriteLine("╔═════╦═════╦═════╗");
                 SetCursorPositionCentered(leftPadding, topPadding + row * 2 + 1);
                 Console.Write("║");
@@ -95,8 +92,8 @@ namespace TicTacToe_Game_GroupProject
                         Console.BackgroundColor = ConsoleColor.DarkGray;
                     }
 
-                    string cell = board[index];
-                    Console.Write($"  {cell}  ");
+                    string cell = board[index];//Hämtar X eller O värde från board
+                    Console.Write($"  {cell}  ");//visar upp specifika array indexen i spelbärddan på console
                     Console.ResetColor();
                     Console.Write("║");
                 }

@@ -10,7 +10,7 @@ namespace TicTacToe_Game_GroupProject
 {
     public class Game
     {
-        private Board board = new Board(); // Använder din Board-klass
+        private Board board = new Board(); //instants variabel av klassen Board för att få möjlighet at använda dess methoder
         private int[][] winningCombinations = new int[][] // Definierar vinstkombinationer
         {
             new int[] { 0, 1, 2 },
@@ -33,8 +33,9 @@ namespace TicTacToe_Game_GroupProject
             while (isGameRunning)
             {
                 string marker = GetMarker(currentPlayer); // Hämta markör baserat på spelare
-                bool validMove = board.NavigateAndMakeMove(marker, out string errorMessage);
+                bool validMove = board.NavigateAndMakeMove(marker, out string errorMessage); //Anropar methoden i klassen board för att navigera
 
+                //Ifstatements undersöker om spel move är valdi eller ej
                 if (!validMove)
                 {
                     // Om draget var ogiltigt, visa brädet med felmeddelande och växla spelare
@@ -94,7 +95,7 @@ namespace TicTacToe_Game_GroupProject
         }
 
         // Hämtar markör baserat på spelare
-        private string GetMarker(string currentPlayer)
+        private string GetMarker(string currentPlayer) // Tilldelar Spelare 1 = X , Spelare 2 = O
         {
             if (currentPlayer == "1")
             {
