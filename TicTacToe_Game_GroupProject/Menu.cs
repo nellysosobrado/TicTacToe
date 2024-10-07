@@ -40,20 +40,20 @@ namespace TicTacToe_Game_GroupProject
             Console.ResetColor();
 
         }
-        static void CenterTextVertically()
+        static void CenterTextVertically() //Method för att centrera text i mitten på konsolfönstret
         {
             int windowHeight = Console.WindowHeight; // Höjden på console
-            int topPadding = (windowHeight / 3); //Flyttas ovanför mitten
+            int topPadding = (windowHeight / 3); // Uträkning på vart mitten befinner sig i comssole
 
-            for(int i = 0; i<topPadding; i++)//Loopar ut tomma rader för centrering vertikalt
+            for(int i = 0; i<topPadding; i++)//Centrerar texten genom att trycka ut tomma rader så att texten hamnas längre ned i fönstret
             {
                 Console.WriteLine();
             }
         }
-        static void CenterText(string text) //Method som centrerar rubriken horisontellt
+        static void CenterText(string text) //Texten placeras i mitten från vänster till höger i cosnolfönstret (horisontellt)
         {
             int windowWidht = Console.WindowWidth; // Console bredden
-            string[] lines = text.Split('\n');
+            string[] lines = text.Split('\n'); //Splitar på varje rad som är en ny rad, och lagrras i arrayn
 
             foreach(string line in lines)
             {
@@ -74,11 +74,12 @@ namespace TicTacToe_Game_GroupProject
                 // Visa menyalternativen och markera valt alternativ
                 DisplayMenuOptions(menuOptions, selectedOption);
 
-                
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Användarens intrycken avläses
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true); // Användarens intryck avläses
                 if (keyInfo.Key == ConsoleKey.UpArrow)
                 {
-                    if(selectedOption == 0)
+                    // Använd en vanlig if-else-struktur för att hantera uppåt-pilens navigation
+                    if (selectedOption == 0)
                     {
                         selectedOption = menuOptions.Length - 1;
                     }
@@ -86,17 +87,21 @@ namespace TicTacToe_Game_GroupProject
                     {
                         selectedOption--;
                     }
-
-
-                    selectedOption = (selectedOption == 0) ? menuOptions.Length - 1 : selectedOption - 1;
                 }
                 else if (keyInfo.Key == ConsoleKey.DownArrow)
                 {
-                    selectedOption = (selectedOption == menuOptions.Length - 1) ? 0 : selectedOption + 1;
+                    // Använd en vanlig if-else-struktur för nedåt-pilens navigation också
+                    if (selectedOption == menuOptions.Length - 1)
+                    {
+                        selectedOption = 0;
+                    }
+                    else
+                    {
+                        selectedOption++;
+                    }
                 }
                 else if (keyInfo.Key == ConsoleKey.Enter) // Bekräfta valet med "Enter"
                 {
- 
                     HandleMenuSelection(selectedOption);
                     break;
                 }
@@ -160,43 +165,45 @@ namespace TicTacToe_Game_GroupProject
             }
         }
 
-        private void ShowLoadingDots()//Method som visar transition mellan Menu till Game sidan
+        private void ShowLoadingDots() // Metod som visar transition mellan Menu till Game sidan
         {
             string loadingText = "Loading";
             int dotCount = 3; // Antalet prickar som ska visas
             int delay = 500; // Fördröjning i millisekunder (0.5 sekunder)
             int totalCycles = 5; // Hur länge animationen ska köras (antal cykler)
-            int windowWidth = Console.WindowWidth;
-            int windowHeight = Console.WindowHeight;
 
-            // Beräkna centrering för texten
-            int verticalPosition = windowHeight / 2;
-            int paddingText = (windowWidth - (loadingText.Length + dotCount)) / 2;
+            // Beräkna längden på den längsta strängen ("Loading...")
+            int maxTextLength = loadingText.Length + dotCount;
 
-            // Rensa skärmen och börja animationen
+            // Centrera texten baserat på den längsta strängen och spara markörens position
             Console.Clear();
-            for (int cycle = 0; cycle < totalCycles; cycle++)
+            int windowWidth = Console.WindowWidth;
+            int cursorTop = Console.CursorTop; // Spara nuvarande radposition
+
+            for (int cycle = 0; cycle < totalCycles; cycle++) // Loopar 5 gånger
             {
-                // För varje cykel, visa texten och prickarna
-                for (int dots = 0; dots <= dotCount; dots++)
+                for (int dots = 0; dots <= dotCount; dots++) // Loop för att visa prickar
                 {
-                    // Centrera texten och prickarna
-                    Console.SetCursorPosition(paddingText, verticalPosition);
-                    Console.Write(loadingText + new string('.', dots)); // Lägg till prickar
+                    // Beräkna centrering baserat på den maximala längden ("Loading...")
+                    int padding = (windowWidth - maxTextLength) / 2;
+
+                    // Flytta markören till ursprunglig position innan vi skriver om texten
+                    Console.SetCursorPosition(padding, cursorTop); // Flytta markören till rätt position
+
+                    // Skriv ut texten med rätt antal prickar
+                    Console.Write(loadingText + new string('.', dots));
 
                     Thread.Sleep(delay); // Vänta lite innan nästa cykel
 
-                    // Rensa raden för att ta bort prickarna innan nästa cykel
-                    Console.SetCursorPosition(paddingText, verticalPosition);
-                    Console.Write(new string(' ', loadingText.Length + dotCount)); // Rensa texten
+                    // Rensa raden genom att skriva ut tomma mellanslag på samma ställe
+                    Console.SetCursorPosition(padding, cursorTop); // Gå tillbaka till samma rad
+                    Console.Write(new string(' ', maxTextLength)); // Rensa texten
                 }
             }
 
-            // När laddningen är klar, visa "Done!"
-            string completeText = "have fun :D!";
-            int paddingCompleteText = (windowWidth - completeText.Length) / 2;
-            Console.SetCursorPosition(paddingCompleteText, verticalPosition + 1);
-            Console.WriteLine(completeText);
+            // När laddningen är klar, visa "Have Fun :D!" på en ny rad
+            Console.SetCursorPosition((windowWidth - "Have Fun :D!".Length) / 2, cursorTop + 1); // Flytta markören nedåt och centrera "Have Fun :D!"
+            Console.WriteLine("Have Fun :D!");
 
             Thread.Sleep(1000); // Pausa en kort stund efter att laddningen är klar
         }

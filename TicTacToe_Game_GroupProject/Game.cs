@@ -23,7 +23,7 @@ namespace TicTacToe_Game_GroupProject
             new int[] { 2, 4, 6 }
         };
 
-        // Startar spelet
+     
         public void Start()
         {
             string currentPlayer = "1"; // Spelare 1 startar
@@ -82,19 +82,32 @@ namespace TicTacToe_Game_GroupProject
         // Växlar till nästa spelare
         private string SwitchPlayer(string currentPlayer)
         {
-            return currentPlayer == "1" ? "2" : "1";
+            if (currentPlayer == "1")
+            {
+                return "2";
+            }
+            else
+            {
+                return "1";
+            }
         }
 
         // Hämtar markör baserat på spelare
         private string GetMarker(string currentPlayer)
         {
-            return currentPlayer == "1" ? "X" : "O";
+            if (currentPlayer == "1")
+            {
+                return "X";
+            }
+            else
+            {
+                return "O";
+            }
         }
 
         // Visar meddelande vid ogiltigt drag
         private void ShowInvalidMoveMessage(string currentPlayer, string marker, string errorMessage)
         {
-            Console.WriteLine($"Invalid move! Player {currentPlayer} will be skipped. Next player's turn.");
             board.Display(currentPlayer, marker, errorMessage);
             Console.ReadKey(); // Vänta på att användaren trycker på en knapp för att se meddelandet
         }

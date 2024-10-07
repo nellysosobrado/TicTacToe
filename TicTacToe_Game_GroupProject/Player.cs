@@ -43,14 +43,24 @@ namespace TicTacToe_Game_GroupProject
         public void SetPlayerNames()
         {
             Console.Write("Enter Player 1 name: ");
-            string player1Name = Console.ReadLine() ?? "Player 1"; // Default till "Player 1"
+            string player1Name = Console.ReadLine()!; // "!" säger att vi ignorerar null-varningen
+
+            if (string.IsNullOrWhiteSpace(player1Name))
+            {
+                player1Name = "Player 1"; // Säkerställ att namnet inte är tomt
+            }
+
             Console.Write("Enter Player 2 name: ");
-            string player2Name = Console.ReadLine() ?? "Player 2"; // Default till "Player 2"
+            string player2Name = Console.ReadLine()!;
 
-            players[0] = new Player(string.IsNullOrWhiteSpace(player1Name) ? "Player 1" : player1Name, "X");
-            players[1] = new Player(string.IsNullOrWhiteSpace(player2Name) ? "Player 2" : player2Name, "O");
+            if (string.IsNullOrWhiteSpace(player2Name))
+            {
+                player2Name = "Player 2";
+            }
+
+            players[0] = new Player(player1Name, "X");
+            players[1] = new Player(player2Name, "O");
         }
-
         // Hämtar den aktuella spelaren
         public Player GetCurrentPlayer()
         {
