@@ -5,15 +5,14 @@ namespace TicTacToe_Game_GroupProject
     {
         static void Main(string[] args)
         {
+            // Visa första sidan
+            FirstPage startPage = new FirstPage();
+            startPage.Display();
 
-            FirstPage Start=new FirstPage();
-            Start.Display();
+            // Skapa en instans av Meny-klassen och visa menyn
+            Menu menu = new Menu();
+            menu.ShowMenu();
 
-            // Skapa en instans av Game-klassen och starta spelet
-            Menu game = new Menu();
-            game.ShowMenu(); // Anropa spelets Start-metod
         }
-
-        
     }
 }

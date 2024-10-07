@@ -95,9 +95,21 @@ namespace TicTacToe_Game_GroupProject
             ConsoleKey key;
             errorMessage = "";
 
-            do
+            do//Kör igenom hela koden en gång, och därefter kollar villkorent
             {
-                Display(currentPlayerSymbol == "X" ? "1" : "2", currentPlayerSymbol, errorMessage);
+                //Undersöker vem det är som spelar
+                string currentPlayer;
+                if (currentPlayerSymbol=="X")
+                {
+                    currentPlayer = "1";
+                }
+                else
+                {
+                    currentPlayer = "2";
+                }
+                Display(currentPlayer, currentPlayerSymbol, errorMessage);
+
+
                 int index = CurrentRow * 3 + CurrentCol;
                 key = Console.ReadKey(true).Key;
 
@@ -131,7 +143,7 @@ namespace TicTacToe_Game_GroupProject
                         return false;
                 }
 
-            } while (key != ConsoleKey.Escape);
+            } while (key != ConsoleKey.Escape); //Om användarens intryck input inte är  esape)
 
             return false;
         }

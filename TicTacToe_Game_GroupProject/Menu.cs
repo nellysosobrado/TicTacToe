@@ -78,6 +78,16 @@ namespace TicTacToe_Game_GroupProject
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Användarens intrycken avläses
                 if (keyInfo.Key == ConsoleKey.UpArrow)
                 {
+                    if(selectedOption == 0)
+                    {
+                        selectedOption = menuOptions.Length - 1;
+                    }
+                    else
+                    {
+                        selectedOption--;
+                    }
+
+
                     selectedOption = (selectedOption == 0) ? menuOptions.Length - 1 : selectedOption - 1;
                 }
                 else if (keyInfo.Key == ConsoleKey.DownArrow)

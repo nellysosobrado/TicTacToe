@@ -1,20 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using TicTacToe_Game_GroupProject;
 
 namespace TicTacToe_Game_GroupProject
 {
-    
     public class Game
     {
         private Board board = new Board(); // Använder din Board-klass
-        private ErrorManager errorManager = new ErrorManager(); // Lägg till en instans av ErrorManager
+        private int[][] winningCombinations = new int[][] // Definierar vinstkombinationer
+        {
+            new int[] { 0, 1, 2 },
+            new int[] { 3, 4, 5 },
+            new int[] { 6, 7, 8 },
+            new int[] { 0, 3, 6 },
+            new int[] { 1, 4, 7 },
+            new int[] { 2, 5, 8 },
+            new int[] { 0, 4, 8 },
+            new int[] { 2, 4, 6 }
+        };
 
-        public void Start()// Startar spelet
+        // Startar spelet
+        public void Start()
         {
             string currentPlayer = "1"; // Spelare 1 startar
             bool isGameRunning = true;
@@ -27,15 +37,16 @@ namespace TicTacToe_Game_GroupProject
 
                 if (!validMove)
                 {
-                    board.Display(currentPlayer, marker, errorMessage);
-                    Console.ReadKey(); // Vänta på att användaren trycker på en knapp för att se meddelandet
-                    currentPlayer = (currentPlayer == "1") ? "2" : "1"; // Växla spelare
+                    // Om draget var ogiltigt, visa meddelande och växla spelare
+                    ShowInvalidMoveMessage(currentPlayer, marker, errorMessage);
+                    currentPlayer = SwitchPlayer(currentPlayer);
                     continue; // Hoppa över resten av loopen för att gå direkt till nästa spelare
                 }
 
                 board.Display(currentPlayer, marker); // Visa brädan
 
-                if (CheckForWinner())
+                // Kolla om någon har vunnit
+                if (CheckWinner(marker))
                 {
                     Console.WriteLine($"Player {currentPlayer} wins!");
                     isGameRunning = false;
@@ -52,6 +63,22 @@ namespace TicTacToe_Game_GroupProject
                 }
             }
         }
+
+        // Kontrollerar om en spelare har vunnit
+        private bool CheckWinner(string playerSymbol)
+        {
+            foreach (var combo in winningCombinations)
+            {
+                if (board.BoardState[combo[0]] == playerSymbol &&
+                    board.BoardState[combo[1]] == playerSymbol &&
+                    board.BoardState[combo[2]] == playerSymbol)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         // Växlar till nästa spelare
         private string SwitchPlayer(string currentPlayer)
         {
@@ -64,36 +91,15 @@ namespace TicTacToe_Game_GroupProject
             return currentPlayer == "1" ? "X" : "O";
         }
 
-        private bool CheckForWinner()
+        // Visar meddelande vid ogiltigt drag
+        private void ShowInvalidMoveMessage(string currentPlayer, string marker, string errorMessage)
         {
-            int[,] winningCombinations = {
-                { 0, 1, 2 },
-                { 3, 4, 5 },
-                { 6, 7, 8 },
-                { 0, 3, 6 },
-                { 1, 4, 7 },
-                { 2, 5, 8 },
-                { 0, 4, 8 },
-                { 2, 4, 6 }
-            };
-
-            for (int i = 0; i < winningCombinations.GetLength(0); i++)
-            {
-                int a = winningCombinations[i, 0];
-                int b = winningCombinations[i, 1];
-                int c = winningCombinations[i, 2];
-
-                if (board.BoardState[a] == board.BoardState[b] &&
-                    board.BoardState[b] == board.BoardState[c] &&
-                    board.BoardState[a] != " ")
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            Console.WriteLine($"Invalid move! Player {currentPlayer} will be skipped. Next player's turn.");
+            board.Display(currentPlayer, marker, errorMessage);
+            Console.ReadKey(); // Vänta på att användaren trycker på en knapp för att se meddelandet
         }
 
+        // Kolla om brädan är full
         private bool IsBoardFull()
         {
             return board.BoardState.All(s => s == "X" || s == "O");
