@@ -16,6 +16,7 @@ namespace TicTacToe_Game_GroupProject
 
         private ErrorManager errorManager = new ErrorManager(); // Instans av ErrorManager.cs klassen för att anroppa felhanteringarna
 
+        //Instans properties för att avläsa klassen board, public för att andra klasser ska nå
         public string[] BoardState//Avläser spelbrädan
         {
             get
@@ -23,9 +24,38 @@ namespace TicTacToe_Game_GroupProject
                 return board; 
             }
         }
+        //CurrentRow & CurrentCol, begränsar användarens navigation inom brädan. Navigationen stannar inom bräddan
+        public int CurrentRow
+        {
+            get
+            {
+                if (currentRow < 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return currentRow;
+                }
+            }
+        }
+        public int CurrentCol
+        {
+            get
+            {
+                if(currentCol>2)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return currentCol;
+                }
+            }
+        }
 
-        public int CurrentRow => currentRow < 0 ? 0 : currentRow;
-        public int CurrentCol => currentCol > 2 ? 2 : currentCol;
+
+
 
         public bool IsValidMove(int index)
         {
