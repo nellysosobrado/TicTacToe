@@ -106,13 +106,6 @@ namespace TicTacToe_Game_GroupProject
             }
         }
 
-        // Visar meddelande vid ogiltigt drag
-        private void ShowInvalidMoveMessage(string currentPlayer, string marker, string errorMessage)
-        {
-            board.Display(currentPlayer, marker, errorMessage);
-            Console.ReadKey(); // Vänta på att användaren trycker på en knapp för att se meddelandet
-        }
-
         // Kolla om brädan är full
         private bool IsBoardFull()
         {
