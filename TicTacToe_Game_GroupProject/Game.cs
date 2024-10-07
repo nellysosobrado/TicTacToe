@@ -23,7 +23,7 @@ namespace TicTacToe_Game_GroupProject
             new int[] { 2, 4, 6 }
         };
 
-     
+
         public void Start()
         {
             string currentPlayer = "1"; // Spelare 1 startar
@@ -37,8 +37,9 @@ namespace TicTacToe_Game_GroupProject
 
                 if (!validMove)
                 {
-                    // Om draget var ogiltigt, visa meddelande och växla spelare
-                    ShowInvalidMoveMessage(currentPlayer, marker, errorMessage);
+                    // Om draget var ogiltigt, visa brädet med felmeddelande och växla spelare
+                    board.Display(currentPlayer, marker, errorMessage);
+                    Console.ReadKey(); // Vänta på att användaren trycker på en knapp
                     currentPlayer = SwitchPlayer(currentPlayer);
                     continue; // Hoppa över resten av loopen för att gå direkt till nästa spelare
                 }
