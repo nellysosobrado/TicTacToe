@@ -8,13 +8,21 @@ namespace TicTacToe_Game_GroupProject
 {
     public class Board
     {
+        //Instans variablar av klassen board
         private string[] board = { " ", " ", " ", " ", " ", " ", " ", " ", " " };
+
         private int currentRow = 0;
         private int currentCol = 0;
 
-        private ErrorManager errorManager = new ErrorManager(); // Lägg till en instans av ErrorManager
+        private ErrorManager errorManager = new ErrorManager(); // Instans av ErrorManager.cs klassen för att anroppa felhanteringarna
 
-        public string[] BoardState => board;
+        public string[] BoardState//Avläser spelbrädan
+        {
+            get
+            {
+                return board; 
+            }
+        }
 
         public int CurrentRow => currentRow < 0 ? 0 : currentRow;
         public int CurrentCol => currentCol > 2 ? 2 : currentCol;
@@ -90,7 +98,7 @@ namespace TicTacToe_Game_GroupProject
             board = new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " " };
         }
 
-        public bool NavigateAndMakeMove(string currentPlayerSymbol, out string errorMessage)
+        public bool NavigateAndMakeMove(string currentPlayerSymbol, out string errorMessage) //Hanterar navigationen på brädan
         {
             ConsoleKey key;
             errorMessage = "";
